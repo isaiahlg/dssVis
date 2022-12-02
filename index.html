@@ -23,7 +23,7 @@
     function loadData() {
         return Promise.all([
             text('data/p13uhs0_1247/DSSfiles/Buscoords.dss'),
-            d3.json("data/countries.geo.json"),
+            d3.json("data/bay.geo.json"),
         ]).then(resps => {
             data.busStr = resps[0]
             data.countries = resps[1];
@@ -80,7 +80,18 @@
     function getMapProjection(config) {
         let {width, height} = config;
         let projection = d3.geoMercator()
-        projection.scale(51200).translate([109600, 37000])
+        // projection.scale(1).translate([width/2, height/2])
+        let a0 = [102400, 218800, 735000]
+        let s0 = 10240
+        let x0 = 21879
+        let y0 = 7351
+        let f = 70
+        let b = 22
+        let s = f * s0
+        let x = f * (x0 - b)
+        let y = f * (y0 - b)
+
+        projection.scale(s).translate([x, y])
                     
         data.mapProjection = projection;
         return projection;
@@ -112,11 +123,18 @@
             .data(busses.features)
             .enter()
             .append("circle")
-            .attr("r", 1)
+            .attr("r", 0.8)
             .attr("cx", d => projection([d.geometry.coordinates[0], d.geometry.coordinates[1]])[0])
             .attr("cy", d => projection([d.geometry.coordinates[0], d.geometry.coordinates[1]])[1])
             .attr("fill", "#2a5599")
     }
+
+    let zoom = d3.zoom().on('zoom', handleZoom);
+    function handleZoom(e) {
+        d3.select('#map')
+            .attr('transform', e.transform);
+    }
+    d3.select('#map').call(zoom)
 
     loadData().then(parseData).then(showData).then(console.log(data))
     
