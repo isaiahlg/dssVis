@@ -23,10 +23,10 @@
     function loadData() {
         return Promise.all([
             text('data/p13uhs0_1247/DSSfiles/Buscoords.dss'),
-            d3.json("data/bay.geo.json"),
+            d3.json("data/geojsons/bay.geo.json"),
         ]).then(resps => {
             data.busStr = resps[0]
-            data.countries = resps[1];
+            data.zips = resps[1];
             return data
         })
     }
@@ -63,7 +63,7 @@
     }
 
     function showData() {
-        drawMap(data.countries)
+        drawMap(data.zips)
         drawBusses(data.busObj)
         return
     }
@@ -80,8 +80,6 @@
     function getMapProjection(config) {
         let {width, height} = config;
         let projection = d3.geoMercator()
-        // projection.scale(1).translate([width/2, height/2])
-        let a0 = [102400, 218800, 735000]
         let s0 = 10240
         let x0 = 21879
         let y0 = 7351
@@ -97,11 +95,11 @@
         return projection;
     }
 
-    function drawBaseMap(container, countries, projection) {
+    function drawBaseMap(container, zips, projection) {
         let path = d3.geoPath().projection(projection);
 
         container.selectAll("path")
-            .data(countries)
+            .data(zips)
             .enter()
             .append("path")
             .attr("d", d => path(d)) 
@@ -109,10 +107,20 @@
             .attr("fill", "#eee")
     }
 
+    function addZoom() {
+        let zoom = d3.zoom().on('zoom', handleZoom);
+        function handleZoom(e) {
+            d3.select('#map')
+                .attr('transform', e.transform);
+        }
+        d3.select('#map').call(zoom)
+    }
+
     function drawMap(geoJson) {
         let config = getMapConfig();
         let projection = getMapProjection(config);
         drawBaseMap(config.container, geoJson.features, projection)
+        addZoom()
     }
 
     function drawBusses(busses) {
@@ -129,12 +137,7 @@
             .attr("fill", "#2a5599")
     }
 
-    let zoom = d3.zoom().on('zoom', handleZoom);
-    function handleZoom(e) {
-        d3.select('#map')
-            .attr('transform', e.transform);
-    }
-    d3.select('#map').call(zoom)
+    
 
     loadData().then(parseData).then(showData).then(console.log(data))
     
