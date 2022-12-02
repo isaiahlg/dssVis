@@ -10,14 +10,54 @@
 
     <h1>Busses and Loads</h1>
     <div>
-
+        <input type="file" id="fileInput">
+        <p>Hello, world! </p>
     </div>
 
 </body>
 
 <script>
 
+    fetch('data/p13uhs0_1247/DSSfiles/Buscoords.dss')
+        .then(resp => resp.text())
+        .then(text => {
+            const busObj = parseText(text);
+            console.log(busObj)
+        });
 
+   function parseText(busString) {
+        
+    let busObj = {
+            "type": "FeatureCollection",
+            "features": []
+        };  // object for storing output of function
+        let features = []
+
+        // split up bus text into an array
+        let busArray = busString.split('\n'); // get each bus with newline element
+        let busSplitArray = busArray.map(bus => bus.split(' ')) // split each bus into name and coords
+        
+        // convert array into a geoJSON
+        busSplitArray.forEach(element => {
+            let busName = element[0]
+            let busLong = +element[1]
+            let busLat = +element[2]
+            busObj["features"].push({
+                "type": "Feature",
+                "properties": {
+                    "name": busName
+                },
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [busLong, busLat]
+                }
+            })
+        });
+        return busObj
+    }
+
+    
+    
 </script>
 
 </html>
