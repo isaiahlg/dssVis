@@ -22,16 +22,23 @@
 
     function loadData() {
         return Promise.all([
-            text('data/p13uhs0_1247/DSSfiles/Buscoords.dss'),
             d3.json("data/geojsons/bay.geo.json"),
+            text('data/p13uhs0_1247/DSSfiles/Buscoords.dss'),
+            text('data/p13uhs0_1247/DSSfiles/Lines.dss'),
         ]).then(resps => {
-            data.busStr = resps[0]
-            data.zips = resps[1];
+            data.zips = resps[0];
+            data.busStr = resps[1];
+            data.lineStr = resps[2];
             return data
         })
     }
 
     function parseData() {
+        parseBusData()
+        parseLineData()
+    }
+
+    function parseBusData() {
         // initialize geoJSON object for storing output of function
         let busObj = {
             "type": "FeatureCollection",
@@ -40,10 +47,10 @@
 
         // split up bus text into an array
         let busArray = data.busStr.split('\n'); // get each bus with newline element
-        let busSplitArray = busArray.map(bus => bus.split(' ')) // split each bus into name and coords
+        let busArrayFilt = busArray.filter(b => b.length) // filter blank lines
+        let busArraySplit = busArrayFilt.map(bus => bus.split(' ')) // split each bus into name and coords
         // convert array into a geoJSON
-        busSplitArray.forEach(element => {
-            if (!element[0]) {return} // skip empty lines of text to avoid errors later
+        busArraySplit.forEach(element => {
             let busName = element[0]
             let busLong = +element[1]
             let busLat = +element[2]
@@ -60,6 +67,40 @@
         });
         data.busObj = busObj
         return busObj
+    }
+
+    function parseLineData() {
+        let lineObj = {
+            "type": "FeatureCollection",
+            "features": []
+        }
+
+        let lineArray = data.lineStr.split('\n');
+        let lineArrayFilt = lineArray.filter(l => l.length) // filter blank lines
+        let lineArraySplit = lineArrayFilt.map(l => l.split(' '))
+        console.log(lineArraySplit)
+
+        lineArraySplit.forEach(l => {
+            lineObj["features"].push({
+                "type": "Feature",
+                "properties": {
+                    "name": l[1], 
+                    "bus1": l[4],
+                    "bus2": l[5]
+                    // todo add in other line elements
+                    
+                },
+                "geometry": {
+                    "type": "linestring",
+                    "coordinates": [["x1","y1"],["x2","y2"]]
+                    // todo figure out how match up busses and
+                    // extract coordinates
+                    
+                }
+            })
+        })
+        data.lineObj = lineObj
+        return lineObj
     }
 
     function showData() {
@@ -83,11 +124,11 @@
         let s0 = 10240
         let x0 = 21879
         let y0 = 7351
-        let f = 70
+        let m = 70
         let b = 22
-        let s = f * s0
-        let x = f * (x0 - b)
-        let y = f * (y0 - b)
+        let s = m * s0
+        let x = m * (x0 - b)
+        let y = m * (y0 - b)
 
         projection.scale(s).translate([x, y])
                     
@@ -139,7 +180,7 @@
 
     
 
-    loadData().then(parseData).then(showData).then(console.log(data))
+    loadData().then(parseData).then(showData).then(console.log("All Data: ", data))
     
 </script>
 
