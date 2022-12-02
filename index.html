@@ -8,37 +8,42 @@
 
 <body>
 
-    <h1>Busses and Loads</h1>
+    <h1>Busses and Lines</h1>
     <div>
-        <input type="file" id="fileInput">
         <p>Hello, world! </p>
+        <svg id="map"></svg>
     </div>
 
 </body>
 
-<script>
+<script type="module">
+    import {text} from "https://cdn.skypack.dev/d3-fetch@3";
+    let data = {}
 
-    fetch('data/p13uhs0_1247/DSSfiles/Buscoords.dss')
-        .then(resp => resp.text())
-        .then(text => {
-            const busObj = parseText(text);
-            console.log(busObj)
-        });
+    function loadData() {
+        return Promise.all([
+            text('data/p13uhs0_1247/DSSfiles/Buscoords.dss'),
+            d3.json("data/countries.geo.json"),
+        ]).then(resps => {
+            data.busStr = resps[0]
+            data.countries = resps[1];
+            return data
+        })
+    }
 
-   function parseText(busString) {
-        
-    let busObj = {
+    function parseData() {
+        // initialize geoJSON object for storing output of function
+        let busObj = {
             "type": "FeatureCollection",
             "features": []
-        };  // object for storing output of function
-        let features = []
+        };  
 
         // split up bus text into an array
-        let busArray = busString.split('\n'); // get each bus with newline element
+        let busArray = data.busStr.split('\n'); // get each bus with newline element
         let busSplitArray = busArray.map(bus => bus.split(' ')) // split each bus into name and coords
-        
         // convert array into a geoJSON
         busSplitArray.forEach(element => {
+            if (!element[0]) {return} // skip empty lines of text to avoid errors later
             let busName = element[0]
             let busLong = +element[1]
             let busLat = +element[2]
@@ -53,10 +58,67 @@
                 }
             })
         });
+        data.busObj = busObj
         return busObj
     }
 
-    
+    function showData() {
+        drawMap(data.countries)
+        drawBusses(data.busObj)
+        return
+    }
+
+    function getMapConfig(){
+        let width = 600;
+        let height = 600;
+        let container = d3.select("#map")
+            .attr("height", height)
+            .attr("width", width)
+        return {width, height, container}
+    }
+
+    function getMapProjection(config) {
+        let {width, height} = config;
+        let projection = d3.geoMercator()
+        projection.scale(51200).translate([109600, 37000])
+                    
+        data.mapProjection = projection;
+        return projection;
+    }
+
+    function drawBaseMap(container, countries, projection) {
+        let path = d3.geoPath().projection(projection);
+
+        container.selectAll("path")
+            .data(countries)
+            .enter()
+            .append("path")
+            .attr("d", d => path(d)) 
+            .attr("stroke", "#ccc")
+            .attr("fill", "#eee")
+    }
+
+    function drawMap(geoJson) {
+        let config = getMapConfig();
+        let projection = getMapProjection(config);
+        drawBaseMap(config.container, geoJson.features, projection)
+    }
+
+    function drawBusses(busses) {
+        let config = getMapConfig();
+        let projection = getMapProjection(config);
+        let container = config.container;
+        let circles = container.selectAll("circle")
+            .data(busses.features)
+            .enter()
+            .append("circle")
+            .attr("r", 1)
+            .attr("cx", d => projection([d.geometry.coordinates[0], d.geometry.coordinates[1]])[0])
+            .attr("cy", d => projection([d.geometry.coordinates[0], d.geometry.coordinates[1]])[1])
+            .attr("fill", "#2a5599")
+    }
+
+    loadData().then(parseData).then(showData).then(console.log(data))
     
 </script>
 
