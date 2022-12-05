@@ -10,13 +10,23 @@
 
     <h1>Busses and Lines</h1>
     <div>
-        <p>Hello, world! </p>
         <svg id="map"></svg>
     </div>
 
 </body>
 
+
+
 <script type="module">
+    // TODO List
+    // separate out the data loading and parsing into its own file
+    // separate out the data drawing into its own js file
+    // write a geojson file after parsing data
+    // read geojson file for showing data in d3
+    // add other components
+    
+    
+    // use for reading text files into d3.js
     import {text} from "https://cdn.skypack.dev/d3-fetch@3";
     
     // global data variable
@@ -48,7 +58,7 @@
         ]).then(resps => {
             data.zips = resps[0];
             data.busStrings.push(resps[1]);
-            for (let i = 2; i < 3; i += 1) { // todo import other lines files
+            for (let i = 2; i < resps.length; i += 1) {
                 data.lineStrings.push(resps[i])
             }
             return data
@@ -77,68 +87,74 @@
         let featureArray = []
         
         // split up bus text into an array
-        let busArray = busStr.split('\n'); // get each bus with newline element
-        let busArrayFilt = busArray.filter(b => b.length) // filter blank lines
-        let busArraySplit = busArrayFilt.map(bus => bus.split(' ')) // split each bus into name and coords
-
-        // convert the array of arrays into an array of geoJSON feature objects
-        busArraySplit.forEach(element => {
-            let busName = element[0]
-            let busLong = +element[1]
-            let busLat = +element[2]
-            featureArray.push({
-                "type": "Feature",
-                "properties": {
-                    "name": busName
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [busLong, busLat]
-                }
-            })
-        });
+        busStr
+            .split('\n') // get each bus with newline element
+            .filter(b => b.length) // filter blank lines
+            .map(bus => bus.split(' ')) // split each bus into name and coords
+            .forEach(b => { 
+                // convert the array of arrays into an array of geoJSON feature objects
+                let busName = b[0]
+                let busLong = +b[1]
+                let busLat = +b[2]
+                
+                featureArray.push({
+                    "type": "Feature",
+                    "properties": {
+                        "name": busName
+                    },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [busLong, busLat]
+                    }
+                })
+            });
         return featureArray;
     }
 
     function parseLineData(lineStr) {
         // array for the results
         let featureArray = []
+        
+        lineStr
+            .split('\n') // parse the line string into an array
+            .filter(l => l.length) // filter out blank lines
+            .filter(b => !b.includes("Fuse.")) // filter out fuses
+            .map(l => l.split(' ')) // split each line into array for easier parsing
+            .forEach(l => {                 
+                // convert the array of arrays into an array of geoJSON feature objects
+                let lineName = l[1]
+                let name = l[1]
+                let length = +l[3].slice(l[3].indexOf("Length=")+7) // extract chars after "="
+                let bus1name = l[4].slice(l[4].indexOf("bus1=")+5, l[4].indexOf(".")) // extract chars after "=", before the "."
+                let bus2name = l[5].slice(l[5].indexOf("bus2=")+5, l[5].indexOf(".")) // extract chars after "=", before the "."
+                let lineCode = l[9].slice(l[9].indexOf("Linecode=")+9) // extract chars after "="                  
+                let bus1feat = data.busObj.features.find(f => f.properties.name === bus1name);
+                let bus2feat = data.busObj.features.find(f => f.properties.name === bus2name);            
+                
+                // ensure the line end busses exist, otherwise early return
+                if (!bus1feat || !bus2feat) {return} 
 
-        // parse the line string into an array
-        let lineArray = lineStr.split('\n');
-        let lineArrayFilt = lineArray.filter(l => l.length) // filter blank lines
-        let lineArraySplit = lineArrayFilt.map(l => l.split(' '))
-
-
-        console.log(lineArraySplit)
-        // debugger;
-
-        // convert the array of arrays into an array of geoJSON feature objects
-        lineArraySplit.forEach(l => {
-            featureArray.push({
-                "type": "Feature",
-                "properties": {
-                    "name": l[1], 
-                    "length": +l[3].slice(l[3].indexOf("Length=")+7), // extract chars after "="
-                    "bus1": l[4].slice(l[4].indexOf("bus1=")+5, l[4].indexOf(".")), // extract chars after "=", before the "."
-                    "bus2": l[5].slice(l[5].indexOf("bus2=")+5, l[5].indexOf(".")), // extract chars after "=", before the "."
-                    "lineCode": l[9].slice(l[9].indexOf("Linecode=")+9), // extract chars after "="                    
-                },
-                "geometry": {
-                    "type": "linestring",
-                    "coordinates": [
-                        // get x1, y1 coordinates by matching bus1 name to a bus in busObj and pulling the coordinates
-                        data.busObj.features.find(f =>
-                            f.properties.name === l[4].slice(l[4].indexOf("bus1=")+5, l[4].indexOf("."))
-                        ).geometry.coordinates,
-                        // get x2, y2 coordinates by matching bus2 name to a bus in busObj and pulling the coordinates
-                        data.busObj.features.find(f =>
-                            f.properties.name === l[5].slice(l[5].indexOf("bus2=")+5, l[5].indexOf("."))
-                        ).geometry.coordinates
-                    ]
-                }
+                let bus1coords = bus1feat.geometry.coordinates
+                let bus2coords = bus2feat.geometry.coordinates
+                
+                featureArray.push({
+                    "type": "Feature",
+                    "properties": {
+                        "name": name,
+                        "length": length,
+                        "bus1": bus1name,
+                        "bus2": bus2name,
+                        "lineCode": lineCode,
+                    },
+                    "geometry": {
+                        "type": "linestring",
+                        "coordinates": [
+                            bus1coords,
+                            bus2coords                            
+                        ]
+                    }
+                })
             })
-        })
         return featureArray
     }
 
