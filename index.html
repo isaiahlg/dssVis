@@ -18,24 +18,51 @@
 
 <script type="module">
     import {text} from "https://cdn.skypack.dev/d3-fetch@3";
-    let data = {}
+    
+    // global data variable
+    let data = {
+        "zips" : {}, // zip code geojson
+        "busStrings": [],
+        "lineStrings": [],
+        "busObj": {
+            "type": "FeatureCollection",
+            "features": []
+        },  
+        "lineObj": {
+            "type": "FeatureCollection",
+            "features": []
+        },
+        "projection": {},
+
+    }
 
     function loadData() {
         return Promise.all([
             d3.json("data/geojsons/bay.geo.json"),
             text('data/p13uhs0_1247/DSSfiles/Buscoords.dss'),
             text('data/p13uhs0_1247/DSSfiles/Lines.dss'),
+            text('data/p13uhs0_1247/DSSfiles/p13uhs0_1247--p13udt13213/Lines.dss'),
+            text('data/p13uhs0_1247/DSSfiles/p13uhs0_1247--p13udt13219/Lines.dss'),
+            text('data/p13uhs0_1247/DSSfiles/p13uhs0_1247--p13udt15681/Lines.dss'),
+            text('data/p13uhs0_1247/DSSfiles/p13uhs0_1247--p13udt18158/Lines.dss'),
         ]).then(resps => {
             data.zips = resps[0];
-            data.busStr = resps[1];
-            data.lineStr = resps[2];
+            data.busStrings.push(resps[1]);
+            for (let i = 2; i < 3; i += 1) { // todo import other lines files
+                data.lineStrings.push(resps[i])
+            }
             return data
         })
     }
 
     function parseData() {
-        parseBusData()
-        parseLineData()
+         // initialize geoJSON objects for storing output of parsing functions
+        data.busStrings.forEach(b => {
+            data.busObj.features.push(...parseBusData(b))
+        })
+        data.lineStrings.forEach(l => {
+            data.lineObj.features.push(...parseLineData(l))
+        })
     }
 
     function showData() {
@@ -45,23 +72,21 @@
         return
     }
 
-    function parseBusData() {
-        // initialize geoJSON object for storing output of function
-        let busObj = {
-            "type": "FeatureCollection",
-            "features": []
-        };  
-
+    function parseBusData(busStr) {
+        // array for results
+        let featureArray = []
+        
         // split up bus text into an array
-        let busArray = data.busStr.split('\n'); // get each bus with newline element
+        let busArray = busStr.split('\n'); // get each bus with newline element
         let busArrayFilt = busArray.filter(b => b.length) // filter blank lines
         let busArraySplit = busArrayFilt.map(bus => bus.split(' ')) // split each bus into name and coords
-        // convert array into a geoJSON
+
+        // convert the array of arrays into an array of geoJSON feature objects
         busArraySplit.forEach(element => {
             let busName = element[0]
             let busLong = +element[1]
             let busLat = +element[2]
-            busObj["features"].push({
+            featureArray.push({
                 "type": "Feature",
                 "properties": {
                     "name": busName
@@ -72,23 +97,25 @@
                 }
             })
         });
-        console.log("busObj: ", busObj);
-        data.busObj = busObj;
-        return busObj;
+        return featureArray;
     }
 
-    function parseLineData() {
-        let lineObj = {
-            "type": "FeatureCollection",
-            "features": []
-        }
+    function parseLineData(lineStr) {
+        // array for the results
+        let featureArray = []
 
-        let lineArray = data.lineStr.split('\n');
+        // parse the line string into an array
+        let lineArray = lineStr.split('\n');
         let lineArrayFilt = lineArray.filter(l => l.length) // filter blank lines
         let lineArraySplit = lineArrayFilt.map(l => l.split(' '))
 
+
+        console.log(lineArraySplit)
+        // debugger;
+
+        // convert the array of arrays into an array of geoJSON feature objects
         lineArraySplit.forEach(l => {
-            lineObj["features"].push({
+            featureArray.push({
                 "type": "Feature",
                 "properties": {
                     "name": l[1], 
@@ -112,9 +139,7 @@
                 }
             })
         })
-        console.log("lineObj: ", lineObj)
-        data.lineObj = lineObj
-        return lineObj
+        return featureArray
     }
 
     function getMapConfig(){
