@@ -65,8 +65,9 @@
                 }
             })
         });
-        data.busObj = busObj
-        return busObj
+        console.log("busObj: ", busObj);
+        data.busObj = busObj;
+        return busObj;
     }
 
     function parseLineData() {
@@ -78,27 +79,31 @@
         let lineArray = data.lineStr.split('\n');
         let lineArrayFilt = lineArray.filter(l => l.length) // filter blank lines
         let lineArraySplit = lineArrayFilt.map(l => l.split(' '))
-        console.log(lineArraySplit)
 
         lineArraySplit.forEach(l => {
             lineObj["features"].push({
                 "type": "Feature",
                 "properties": {
                     "name": l[1], 
-                    "bus1": l[4],
-                    "bus2": l[5]
-                    // todo add in other line elements
-                    
+                    "length": +l[3].slice(l[3].indexOf("Length=")+7), // extract chars after "="
+                    "bus1": l[4].slice(l[4].indexOf("bus1=")+5, l[4].indexOf(".")), // extract chars after "=", before the "."
+                    "bus2": l[5].slice(l[5].indexOf("bus2=")+5, l[5].indexOf(".")), // extract chars after "=", before the "."
+                    "lineCode": l[9].slice(l[9].indexOf("Linecode=")+9), // extract chars after "="                    
                 },
                 "geometry": {
                     "type": "linestring",
-                    "coordinates": [["x1","y1"],["x2","y2"]]
-                    // todo figure out how match up busses and
-                    // extract coordinates
-                    
+                    "coordinates": [
+                        data.busObj.features.find(f =>
+                            f.properties.name === l[4].slice(l[4].indexOf("bus1=")+5, l[4].indexOf("."))
+                        ).geometry.coordinates,
+                        data.busObj.features.find(f =>
+                            f.properties.name === l[5].slice(l[5].indexOf("bus2=")+5, l[5].indexOf("."))
+                        ).geometry.coordinates
+                    ]
                 }
             })
         })
+        console.log("lineObj: ", lineObj)
         data.lineObj = lineObj
         return lineObj
     }
