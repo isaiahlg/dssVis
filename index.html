@@ -1,10 +1,6 @@
 <html>
 
-<head>
-
-    <script src="d3.js" ></script>
-
-</head>
+<head></head>
 
 <body>
 
@@ -15,236 +11,40 @@
 
 </body>
 
-
-
 <script type="module">
-    // TODO List
-    // separate out the data loading and parsing into its own file
-    // separate out the data drawing into its own js file
+    // TODO LIST
+    // finish breaking out files into folders
     // write a geojson file after parsing data
     // read geojson file for showing data in d3
     // add other components
     
-    
-    // use for reading text files into d3.js
-    import {text} from "https://cdn.skypack.dev/d3-fetch@3";
-    
-    // global data variable
-    let data = {
-        "zips" : {}, // zip code geojson
-        "busStrings": [],
-        "lineStrings": [],
-        "busObj": {
-            "type": "FeatureCollection",
-            "features": []
-        },  
-        "lineObj": {
-            "type": "FeatureCollection",
-            "features": []
-        },
-        "projection": {},
+    import {LoadData} from "./src/load.js"
+    import {ParseData} from "./src/parse.js"
+    import {ShowData} from "./src/show.js"
 
-    }
-
-    function loadData() {
-        return Promise.all([
-            d3.json("data/geojsons/bay.geo.json"),
-            text('data/p13uhs0_1247/DSSfiles/Buscoords.dss'),
-            text('data/p13uhs0_1247/DSSfiles/Lines.dss'),
-            text('data/p13uhs0_1247/DSSfiles/p13uhs0_1247--p13udt13213/Lines.dss'),
-            text('data/p13uhs0_1247/DSSfiles/p13uhs0_1247--p13udt13219/Lines.dss'),
-            text('data/p13uhs0_1247/DSSfiles/p13uhs0_1247--p13udt15681/Lines.dss'),
-            text('data/p13uhs0_1247/DSSfiles/p13uhs0_1247--p13udt18158/Lines.dss'),
-        ]).then(resps => {
-            data.zips = resps[0];
-            data.busStrings.push(resps[1]);
-            for (let i = 2; i < resps.length; i += 1) {
-                data.lineStrings.push(resps[i])
+    async function Visualize() {
+        // global data variable
+        let data = {
+            "zips" : {}, // zip code geojson
+            "busStrings": [],
+            "lineStrings": [],
+            "busObj": {
+                "type": "FeatureCollection",
+                "features": []
+            },  
+            "lineObj": {
+                "type": "FeatureCollection",
+                "features": []
             }
-            return data
-        })
-    }
-
-    function parseData() {
-         // initialize geoJSON objects for storing output of parsing functions
-        data.busStrings.forEach(b => {
-            data.busObj.features.push(...parseBusData(b))
-        })
-        data.lineStrings.forEach(l => {
-            data.lineObj.features.push(...parseLineData(l))
-        })
-    }
-
-    function showData() {
-        drawMap(data.zips)
-        drawBusses(data.busObj)
-        drawLines(data.lineObj)
-        return
-    }
-
-    function parseBusData(busStr) {
-        // array for results
-        let featureArray = []
-        
-        // split up bus text into an array
-        busStr
-            .split('\n') // get each bus with newline element
-            .filter(b => b.length) // filter blank lines
-            .map(bus => bus.split(' ')) // split each bus into name and coords
-            .forEach(b => { 
-                // convert the array of arrays into an array of geoJSON feature objects
-                let busName = b[0]
-                let busLong = +b[1]
-                let busLat = +b[2]
-                
-                featureArray.push({
-                    "type": "Feature",
-                    "properties": {
-                        "name": busName
-                    },
-                    "geometry": {
-                        "type": "Point",
-                        "coordinates": [busLong, busLat]
-                    }
-                })
-            });
-        return featureArray;
-    }
-
-    function parseLineData(lineStr) {
-        // array for the results
-        let featureArray = []
-        
-        lineStr
-            .split('\n') // parse the line string into an array
-            .filter(l => l.length) // filter out blank lines
-            .filter(b => !b.includes("Fuse.")) // filter out fuses
-            .map(l => l.split(' ')) // split each line into array for easier parsing
-            .forEach(l => {                 
-                // convert the array of arrays into an array of geoJSON feature objects
-                let lineName = l[1]
-                let name = l[1]
-                let length = +l[3].slice(l[3].indexOf("Length=")+7) // extract chars after "="
-                let bus1name = l[4].slice(l[4].indexOf("bus1=")+5, l[4].indexOf(".")) // extract chars after "=", before the "."
-                let bus2name = l[5].slice(l[5].indexOf("bus2=")+5, l[5].indexOf(".")) // extract chars after "=", before the "."
-                let lineCode = l[9].slice(l[9].indexOf("Linecode=")+9) // extract chars after "="                  
-                let bus1feat = data.busObj.features.find(f => f.properties.name === bus1name);
-                let bus2feat = data.busObj.features.find(f => f.properties.name === bus2name);            
-                
-                // ensure the line end busses exist, otherwise early return
-                if (!bus1feat || !bus2feat) {return} 
-
-                let bus1coords = bus1feat.geometry.coordinates
-                let bus2coords = bus2feat.geometry.coordinates
-                
-                featureArray.push({
-                    "type": "Feature",
-                    "properties": {
-                        "name": name,
-                        "length": length,
-                        "bus1": bus1name,
-                        "bus2": bus2name,
-                        "lineCode": lineCode,
-                    },
-                    "geometry": {
-                        "type": "linestring",
-                        "coordinates": [
-                            bus1coords,
-                            bus2coords                            
-                        ]
-                    }
-                })
-            })
-        return featureArray
-    }
-
-    function getMapConfig(){
-        let width = 600;
-        let height = 600;
-        let container = d3.select("#map")
-            .attr("height", height)
-            .attr("width", width)
-        return {width, height, container}
-    }
-
-    function getMapProjection(config) {
-        let {width, height} = config;
-        let projection = d3.geoMercator()
-        let s0 = 10240
-        let x0 = 21879
-        let y0 = 7351
-        let m = 70
-        let b = 22
-        let s = m * s0
-        let x = m * (x0 - b)
-        let y = m * (y0 - b)
-
-        projection.scale(s).translate([x, y])
-                    
-        data.mapProjection = projection;
-        return projection;
-    }
-
-    function drawBaseMap(container, zips, projection) {
-        let path = d3.geoPath().projection(projection);
-
-        container.selectAll("path")
-            .data(zips)
-            .enter()
-            .append("path")
-            .attr("d", d => path(d)) 
-            .attr("stroke", "#ccc")
-            .attr("fill", "#eee")
-    }
-
-    function addZoom() {
-        let zoom = d3.zoom().on('zoom', handleZoom);
-        function handleZoom(e) {
-            d3.select('#map')
-                .attr('transform', e.transform);
         }
-        d3.select('#map').call(zoom)
+
+        data = await LoadData(data);
+        data = ParseData(data);
+        ShowData(data);
     }
 
-    function drawMap(geoJson) {
-        let config = getMapConfig();
-        let projection = getMapProjection(config);
-        drawBaseMap(config.container, geoJson.features, projection)
-        addZoom()
-    }
+    Visualize()
 
-    function drawBusses(busses) {
-        let config = getMapConfig();
-        let projection = getMapProjection(config);
-        let container = config.container;
-        let circles = container.selectAll("circle")
-            .data(busses.features)
-            .enter()
-            .append("circle")
-            .attr("r", 0.8)
-            .attr("cx", d => projection([d.geometry.coordinates[0], d.geometry.coordinates[1]])[0])
-            .attr("cy", d => projection([d.geometry.coordinates[0], d.geometry.coordinates[1]])[1])
-            .attr("fill", "#2a5599")
-    }
-
-    function drawLines(powerLines) {
-        let projection = data.mapProjection
-        let container = d3.select("#map")
-        let lines = container.selectAll("line")
-            .data(powerLines.features)
-            .enter()    
-            .append("line")
-            .attr("x1", d => projection([d.geometry.coordinates[0][0], d.geometry.coordinates[0][1]])[0])
-            .attr("y1", d => projection([d.geometry.coordinates[0][0], d.geometry.coordinates[0][1]])[1])
-            .attr("x2", d => projection([d.geometry.coordinates[1][0], d.geometry.coordinates[1][1]])[0])
-            .attr("y2", d => projection([d.geometry.coordinates[1][0], d.geometry.coordinates[1][1]])[1])
-            .attr("stroke", "#992a2a")
-            .attr("stroke-width", 0.5)
-            .style("opacity", 1)
-    }
-
-    loadData().then(parseData).then(showData).then(console.log("All Data: ", data))
-    
 </script>
 
 </html>
