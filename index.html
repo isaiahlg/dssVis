@@ -18,7 +18,7 @@
     // read geojson file for showing data in d3
     // add other components
     
-    import {LoadData} from "./src/load.js"
+    import {LoadStaticData} from "./src/load.js"
     import {ParseData} from "./src/parse.js"
     import {ShowData} from "./src/show.js"
 
@@ -38,7 +38,7 @@
             }
         }
 
-        data = await LoadData(data);
+        data = await LoadStaticData(data);
         data = ParseData(data);
         ShowData(data);
     }
