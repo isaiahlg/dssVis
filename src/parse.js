@@ -1,5 +1,5 @@
-
-export function ParseData(data) {
+export function ParseStaticData(data) {
+    console.log("**Parsing static data files...")
     // initialize geoJSON objects for storing output of parsing functions
     data.busStrings.forEach(b => {
         data.busObj.features.push(...parseBusData(b));
@@ -85,4 +85,20 @@ function parseLineData(lineStr, busObj) {
             })
         })
     return featureArray
+}
+
+export function ParseDynamicData(f) {
+    console.log("**HD5 File: ", f)
+    let v = 3;
+    // do something with f;
+    // let g = f.get('group');
+    // let d = f.get('group/dataset');
+    // let v = d.value;
+    // let a = d.attrs;
+
+    // console.log("**Group: ", g);
+    // console.log("**Dataset: ", d);
+    // console.log("**Value: ", v);
+    // console.log("**Attributes: ", a);
+    return v;
 }

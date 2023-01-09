@@ -1,6 +1,5 @@
-import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
-
-export function ShowData(data) {
+export function ShowStaticData(data) {
+    console.log("***Displaying static data files...")
     drawMap(data.zips);
     drawBusses(data.busObj);
     drawLines(data.lineObj);
