@@ -60,7 +60,7 @@ function parseLineData(lineStr, busObj) {
             let bus1feat = busObj.features.find(f => f.properties.name === bus1name);
             let bus2feat = busObj.features.find(f => f.properties.name === bus2name);            
             
-            // ensure the line end busses exist, otherwise early return
+            // ensure the line end buses exist, otherwise early return
             if (!bus1feat || !bus2feat) {return} 
 
             let bus1coords = bus1feat.geometry.coordinates
@@ -89,16 +89,46 @@ function parseLineData(lineStr, busObj) {
 
 export function ParseDynamicData(f) {
     console.log("**HD5 File: ", f)
-    let v = 3;
-    // do something with f;
+    // Documentation from js-five on GitHub:
     // let g = f.get('group');
     // let d = f.get('group/dataset');
     // let v = d.value;
     // let a = d.attrs;
 
-    // console.log("**Group: ", g);
-    // console.log("**Dataset: ", d);
-    // console.log("**Value: ", v);
-    // console.log("**Attributes: ", a);
-    return v;
+    let region = f.get('Exports/p13uhs0_1247')
+    // region.keys = ['Buses', 'Circuits', 'Frequency', 'FrequencyColumns', 'Lines', 'Loads', 'Mode', 'ModeColumns', 'PVSystems', 'Storages', 'Timestamp', 'TimestampColumns', 'Transformers']
+    
+    let timestamps = region.get('Timestamp').value // Dataset!
+        // timestamp.name = '/Exports/p13uhs0_1247/Timestamp'
+        // timestampValues[0] = 1483340400 = Mon Jan 02 2017 07:00:00 GMT+0000
+        // timestampValues[1] = 1483340700 = Mon Jan 02 2017 07:05:00 GMT+0000
+        // timestamp.attrs.length = 859
+
+   
+    let buses = region.get('Buses/ElementProperties') // ElementProperties
+    // buses.keys = ['puVmagAngle', 'puVmagAngleColumnRanges', 'puVmagAngleColumns', 'puVmagAngleNames']
+    let busPUVmagAngles = buses.get('puVmagAngle')
+        // approx 850 rows x 25K columns, or 21.6M values
+        // time to check it out!
+    let busPUVmagAngleColumnRanges = buses.get('puVmagAngleColumnRanges')
+        // length = 25214, integer values mostly multiples of 4 or 6, hard to interpret
+    let busPUVmagAngleColumns = buses.get('puVmagAngleColumns')
+        // 182 : "p13udm3216__A1__mag [pu] // voltage magnitude on phase A
+        // 183 : "p13udm3216__A1__ang [Deg] // voltage angle on phase A
+        // 184 : "p13udm3216__B1__mag [pu] // voltage magnitude on phase B
+        // 185 : "p13udm3216__B1__ang [Deg] // voltage mangitude on phase B
+        // .value.length = 25214, = # bus x 2
+    let busPUVmagAngleNames = buses.get('puVmagAngleNames')
+        // .value.length = 12607, = # bus
+        // contains the bus names
+
+    
+    let lines = region.get('Lines/ElementProperties') // ElementProperties
+    // lines.keys = ['CurrentsMagAng', 'CurrentsMagAngColumnRanges', 'CurrentsMagAngColumns', 'CurrentsMagAngNames', 'normamps', 'normampsColumnRanges', 'normampsColumns', 'normampsNames']
+    
+
+    
+    debugger;
+
+    return 3;
 }
