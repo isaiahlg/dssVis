@@ -1,0 +1,22 @@
+{
+  "name": "dssvis",
+  "version": "1.0.0",
+  "description": "Package for visualizing DSS files in JS.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.nrel.gov/ilyonsg/dssVis.git"
+  },
+  "author": "Isaiah Lyons-Galante",
+  "license": "ISC",
+  "dependencies": {
+    "d3": "^7.8.1",
+    "d3-fetch": "^3.0.1",
+    "fs": "^0.0.1-security",
+    "http": "^0.0.1-security",
+    "jsfive": "^0.3.13"
+  }
+}
