@@ -126,14 +126,16 @@ export function ParseDynamicData(f) {
     let busPUVmagAngleNames = buses.get('puVmagAngleNames')
         // .value.length = 12607, = # bus
         // contains the bus names
-
     
     let lines = region.get('Lines/ElementProperties') // ElementProperties
     // lines.keys = ['CurrentsMagAng', 'CurrentsMagAngColumnRanges', 'CurrentsMagAngColumns', 'CurrentsMagAngNames', 'normamps', 'normampsColumnRanges', 'normampsColumns', 'normampsNames']
     
-
+    // download a variable as a CSV file
+    let csvContent = 
+        "data:text/csv;charset=utf-8," 
+        + busPUVmagAngleNames.value.join(',\n');
+    window.open(encodeURI(csvContent));
     
-    debugger;
 
     return 3;
 }
