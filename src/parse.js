@@ -20,6 +20,7 @@ function parseBusData(busStr) {
     busStr
         .split('\n') // get each bus with newline element
         .filter(b => b.length) // filter blank lines
+        .filter(b => b.length > 3) // filter out lines that have just "/r"
         .map(bus => bus.split(' ')) // split each bus into name and coords
         .forEach(b => { 
             // convert the array of arrays into an array of geoJSON feature objects
@@ -48,10 +49,14 @@ function parseLineData(lineStr, busObj) {
     lineStr
         .split('\n') // parse the line string into an array
         .filter(l => l.length) // filter out blank lines
-        .filter(b => !b.includes("Fuse.")) // filter out fuses
+        .filter(l => !l.includes("Fuse.")) // filter out fuses
+        .filter (l => l.includes("Line.")) // filter out "\r" lines
         .map(l => l.split(' ')) // split each line into array for easier parsing
         .forEach(l => {                 
             // convert the array of arrays into an array of geoJSON feature objects
+            if (!l[3]) {
+                console.log("Undefined l: ", l)
+            }
             let name = l[1]
             let length = +l[3].slice(l[3].indexOf("Length=")+7) // extract chars after "="
             let bus1name = l[4].slice(l[4].indexOf("bus1=")+5, l[4].indexOf(".")) // extract chars after "=", before the "."
