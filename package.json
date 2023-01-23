@@ -2,9 +2,10 @@
   "name": "dssvis",
   "version": "1.0.0",
   "description": "Package for visualizing DSS files in JS.",
-  "main": "app.js",
+  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "start": "node app.js"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",

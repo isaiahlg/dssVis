@@ -1,10 +1,12 @@
+// import * as d3 from 'd3';
+
 export function ShowStaticData(data) {
     console.log("***Displaying static data files...")
     drawMap(data.zips);
     drawBusses(data.busObj);
     drawLines(data.lineObj);
     return
-}
+};
 
 function getMapConfig(){
     let width = 600;
@@ -13,7 +15,7 @@ function getMapConfig(){
         .attr("height", height)
         .attr("width", width);
     return {width, height, container};
-}
+};
 
 function getMapProjection() {
     let projection = d3.geoMercator();
@@ -28,7 +30,7 @@ function getMapProjection() {
 
     projection.scale(s).translate([x, y]);
     return projection;
-}
+};
 
 function drawBaseMap(container, zips, projection) {
     const path = d3.geoPath().projection(projection);
