@@ -1,7 +1,7 @@
-import {text} from "https://cdn.skypack.dev/d3-fetch@3";
-// import {text} from 'd3-fetch'; // use for reading text files into d3.js
-// import * as d3 from 'd3'; // import d3 for fetching files
-// import * as hdf5 from 'jsfive'; // import hdf5 for loading store.h5 file
+// import {text} from "https://cdn.skypack.dev/d3-fetch@3";
+import {text} from 'd3-fetch'; // use for reading text files into d3.js
+import * as d3 from 'd3'; // import d3 for fetching files
+import * as hdf5 from 'jsfive'; // import hdf5 for loading store.h5 file
 
 export function LoadStaticData(data) {
     console.log("*Fetching static data files...")

@@ -54,5 +54,5 @@ export async function VisualizeDynamicData() {
     console.log("Done visualizing dynamic data")
 }
 
-VisualizeStaticData();
+// VisualizeStaticData();
 VisualizeDynamicData();

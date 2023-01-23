@@ -1,3 +1,5 @@
+// import * as something from 'something'; // placeholder for imports
+
 export function ParseStaticData(data) {
     console.log("**Parsing static data files...")
     // initialize geoJSON objects for storing output of parsing functions
@@ -134,7 +136,7 @@ export function ParseDynamicData(f) {
     let csvContent = 
         "data:text/csv;charset=utf-8," 
         + busPUVmagAngleNames.value.join(',\n');
-    window.open(encodeURI(csvContent));
+    // window.open(encodeURI(csvContent));
     
 
     return 3;
