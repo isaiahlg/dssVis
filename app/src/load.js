@@ -3,7 +3,7 @@ import {text} from "https://cdn.skypack.dev/d3-fetch@3";
 export function LoadStaticData(data) {
     console.log("*Fetching static data files...")
     return Promise.all([
-        d3.json('/data/geojsons/bay.geo.json'),
+        d3.json('/data/geojson/bay.geo.json'),
         text('/data/p13uhs0_1247/DSSfiles/Buscoords.dss'),
         text('/data/p13uhs0_1247/DSSfiles/Lines.dss'),
         text('/data/p13uhs0_1247/DSSfiles/p13uhs0_1247--p13udt13213/Lines.dss'),

@@ -10,8 +10,10 @@ print("loaded hdf5 file")
 
 region = f['Exports']['p13uhs0_1247']
 # ['Buses', 'Circuits', 'Frequency', 'FrequencyColumns', 'Lines', 'Loads', 'Mode', 'ModeColumns', 'PVSystems', 'Storages', 'Timestamp', 'TimestampColumns', 'Transformers']
-values = region['Buses']['ElementProperties']['puVmagAngleNames'][()]
+#  buses.keys = ['puVmagAngle', 'puVmagAngleColumnRanges', 'puVmagAngleColumns', 'puVmagAngleNames']
+#  lines.keys = ['CurrentsMagAng', 'CurrentsMagAngColumnRanges', 'CurrentsMagAngColumns', 'CurrentsMagAngNames', 'normamps', 'normampsColumnRanges', 'normampsColumns', 'normampsNames']
+values = region['Buses']['ElementProperties']['puVmagAngle'][()]
 print("Values: ", values)
 print("Converting to CSV...")
-values
-print("hello")
+values.tofile('data/csv/data5.csv', sep = ',')
+print("All done!")
