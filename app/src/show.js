@@ -1,4 +1,4 @@
-import * as d3 from 'd3';
+// import * as d3 from 'd3';
 
 export function ShowStaticData(data) {
     console.log("***Displaying static data files...")

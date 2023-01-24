@@ -20,9 +20,9 @@
 // add other components
 
 
-import * as load from "./src/load.js"
-import * as parse from "./src/parse.js"
-import * as show from "./src/show.js"
+import * as load from "./load.js"
+import * as parse from "./parse.js"
+import * as show from "./show.js"
 
 export async function VisualizeStaticData() {
     console.log("Visualizing Static Data...")
@@ -54,5 +54,5 @@ export async function VisualizeDynamicData() {
     console.log("Done visualizing dynamic data")
 }
 
-// VisualizeStaticData();
-VisualizeDynamicData();
+VisualizeStaticData();
+// VisualizeDynamicData();
