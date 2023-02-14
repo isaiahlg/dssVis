@@ -20,9 +20,11 @@
 // add other components
 
 
-import * as load from "./load.js"
-import * as parse from "./parse.js"
-import * as show from "./show.js"
+// import { write } from "fs";
+import * as load from "./load.js";
+import * as parse from "./parse.js";
+import * as geojson from "./export.js";
+import * as show from "./show.js";
 
 export async function VisualizeStaticData() {
     console.log("Visualizing Static Data...")
@@ -43,6 +45,8 @@ export async function VisualizeStaticData() {
 
     staticData = await load.LoadStaticData(staticData);
     staticData = parse.ParseStaticData(staticData);
+    geojson.ExportGeoJSON(staticData.busObj, "busses.json");
+    geojson.ExportGeoJSON(staticData.lineObj, "lines.json");
     show.ShowStaticData(staticData);
     console.log("Done visualizing static data.")
 }
@@ -50,7 +54,7 @@ export async function VisualizeStaticData() {
 export async function VisualizeDynamicData() {
     console.log("Visualizing Dynamic Data")
     let file = await load.LoadDynamicData();
-    let value = parse.ParseDynamicData(file);
+    let _ = parse.ParseDynamicData(file);
     console.log("Done visualizing dynamic data")
 }
 
