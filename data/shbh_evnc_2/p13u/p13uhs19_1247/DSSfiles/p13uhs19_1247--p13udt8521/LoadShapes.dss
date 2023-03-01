@@ -1,0 +1,8 @@
+New Loadshape.SFO_37.8026_-122.3414_15_180 npts= 35040 interval=0.25 mult = (sngFile=../../../../profiles/SFO_37.8026_-122.3414_15_180.sng)
+
+New Loadshape.com_kw_41601_pu npts= 35040 interval=0.25 mult = (sngFile=../../../../profiles/com_kw_41601_pu.sng) qmult = (sngFile=../../../../profiles/com_kvar_41601_pu.sng)
+
+New Loadshape.com_kw_39325_pu npts= 35040 interval=0.25 mult = (sngFile=../../../../profiles/com_kw_39325_pu.sng) qmult = (sngFile=../../../../profiles/com_kvar_39325_pu.sng)
+
+New Loadshape.com_kw_8388_pu npts= 35040 interval=0.25 mult = (sngFile=../../../../profiles/com_kw_8388_pu.sng) qmult = (sngFile=../../../../profiles/com_kvar_8388_pu.sng)
+

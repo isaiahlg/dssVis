@@ -1,0 +1,2 @@
+,CTPrimary,Delay,ForwardBand,ForwardR,ForwardVreg,ForwardX,Idx,IsInverseTime,IsReversible,MaxTapChange,MonitoredBus,Name,PTRatio,ReverseBand,ReverseR,ReverseVreg,ReverseX,TapDelay,TapNumber,TapWinding,Transformer,VoltageLimit,Winding
+sb2_p13uhs19_1247_reg_51,300.0,15.0,1.9919999999999998,0.0,123.60000000000001,0.0,1,False,False,16,,sb2_p13uhs19_1247_reg_51,60.0,3.0,0.0,120.0,0.0,2.0,4,2,sb2_p13uhs19_1247_trans_51,0.0,2

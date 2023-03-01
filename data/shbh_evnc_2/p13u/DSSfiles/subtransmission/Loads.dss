@@ -1,0 +1,2 @@
+New Load.load_p13uhv1 conn=wye bus1=p13uhv1.1.2.3 kV=69.0 Vminpu=0.8 Vmaxpu=1.2 model=1 kW=12.228139947819665 kvar=0.1382581100365506 Phases=3 yearly=com_kw_33846_pu
+

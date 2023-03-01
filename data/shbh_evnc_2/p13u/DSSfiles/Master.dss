@@ -1,0 +1,19 @@
+Clear
+
+New Circuit.Full_Network bus1=st_mat pu=1.0 basekV=230.0 R1=0.00001 X1=0.00001 R0=0.00001 X0=0.00001
+
+Redirect subtransmission/Transformers.dss
+Redirect subtransmission/LoadShapes.dss 
+Redirect subtransmission/Loads.dss
+Redirect subtransmission/LineCodes.dss
+Redirect subtransmission/Lines.dss
+
+New Load.load_p13uhs12 conn=delta bus1=p13uhs12_69.1.2.3 kV=69.0 Vminpu=0.8 Vmaxpu=1.2 model=1 kW=10000 kvar=1000 Phases=3 
+Set Voltagebases=[0.12, 0.208, 0.24, 0.48, 7.2, 12.47, 69.0, 230.0]
+
+Calcvoltagebases
+
+Buscoords Buscoords.dss
+set maxcontroliter=50
+
+Solve mode=yearly stepsize=15m number=35040

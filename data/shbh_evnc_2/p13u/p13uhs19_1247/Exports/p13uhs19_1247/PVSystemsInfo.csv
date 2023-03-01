@@ -1,0 +1,2 @@
+,Idx,Irradiance,IrradianceNow,Name,Pmpp,RegisterNames,RegisterValues,Tdaily,Tduty,Tyearly,daily,duty,kVARated,kW,kvar,pf,yearly
+0,1,1.0,0.0,pv_load_p13ulv64927,100,"['kWh', 'kvarh', 'Max kW', 'Max kVA', 'Hours', 'Price($)']","[581.5026054005717, -3.8207691772496992, 95.69377990430621, 95.69377990430624, 23.99999999999993, 14.537565135014304]",,,,,,95.69377990430621,0.0,-0.16426804536076053,1.0,SFO_37.8026_-122.3414_15_180

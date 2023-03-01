@@ -6,5 +6,5 @@ export function ExportGeoJSON(geoJSONdata, filename) {
     let linkElement = document.createElement('a');
     linkElement.setAttribute('href', dataUri);
     linkElement.setAttribute('download', filename);
-    linkElement.click();
+    // linkElement.click();
 };

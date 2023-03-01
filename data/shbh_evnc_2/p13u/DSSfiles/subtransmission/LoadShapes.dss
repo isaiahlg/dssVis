@@ -1,0 +1,2 @@
+New Loadshape.com_kw_33846_pu npts= 35040 interval=0.25 mult = sngFile=('../../profiles/com_kw_33846_pu.sng') qmult = ('sngFile=../../profiles/com_kvar_33846_pu.sng')
+

@@ -1,0 +1,5 @@
+,Transformer,HighSideConnection,NumPhases
+0,Transformer.sb2_p13uhs19_1247_trans_51,delta,3
+1,Transformer.tr(r:p13udt8521-p13udt8521lv),wye,1
+2,Transformer.tr(r:p13udt22085-p13udt22085lv),wye,3
+3,Transformer.tr(r:p13udt22087-p13udt22087lv),wye,1

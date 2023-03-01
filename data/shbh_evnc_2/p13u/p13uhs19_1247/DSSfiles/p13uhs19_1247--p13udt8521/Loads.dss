@@ -1,0 +1,10 @@
+New Load.load_p13ulv18546_1 conn=wye bus1=p13ulv18546.1 kV=0.12 Vminpu=0.8 Vmaxpu=1.2 model=1 kW=2.4519136613739017 kvar=0.7054970531635038 Phases=1 yearly=com_kw_41601_pu
+
+New Load.load_p13ulv18546_2 conn=wye bus1=p13ulv18546.2 kV=0.12 Vminpu=0.8 Vmaxpu=1.2 model=1 kW=2.4519136613739017 kvar=0.7054970531635038 Phases=1 yearly=com_kw_41601_pu
+
+New Load.load_p13ulv64927 conn=wye bus1=p13ulv64927.1.2.3 kV=0.48 Vminpu=0.8 Vmaxpu=1.2 model=1 kW=62.098676256933906 kvar=4.685698729106203 Phases=3 yearly=com_kw_39325_pu
+
+New Load.load_p13ulv64929_1 conn=wye bus1=p13ulv64929.1 kV=0.12 Vminpu=0.8 Vmaxpu=1.2 model=1 kW=3.7214581437554526 kvar=1.0952440854443204 Phases=1 yearly=com_kw_8388_pu
+
+New Load.load_p13ulv64929_2 conn=wye bus1=p13ulv64929.2 kV=0.12 Vminpu=0.8 Vmaxpu=1.2 model=1 kW=3.7214581437554526 kvar=1.0952440854443204 Phases=1 yearly=com_kw_8388_pu
+

@@ -1,0 +1,16 @@
+{
+    "event_log": "Exports/p13uhs19_1247/event_log.csv",
+    "element_info_files": [
+        "Exports/p13uhs19_1247/FusesInfo.csv",
+        "Exports/p13uhs19_1247/LinesInfo.csv",
+        "Exports/p13uhs19_1247/LoadsInfo.csv",
+        "Exports/p13uhs19_1247/RegControlsInfo.csv",
+        "Exports/p13uhs19_1247/TransformersInfo.csv",
+        "Exports/p13uhs19_1247/VsourcesInfo.csv",
+        "Exports/p13uhs19_1247/PVSystemsInfo.csv",
+        "Exports/p13uhs19_1247/TransformersPhaseInfo.csv"
+    ],
+    "feeder_head_info_files": [
+        "Exports/p13uhs19_1247/FeederHeadInfo.json"
+    ]
+}

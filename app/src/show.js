@@ -22,8 +22,10 @@ function getMapProjection() {
     let s0 = 10240;
     let x0 = 21879;
     let y0 = 7351;
-    let m = 70;
-    let b = 22;
+    // let m = 70;
+    // let b = 22;
+    let m = 10;
+    let b = -10;
     let s = m * s0;
     let x = m * (x0 - b);
     let y = m * (y0 - b);

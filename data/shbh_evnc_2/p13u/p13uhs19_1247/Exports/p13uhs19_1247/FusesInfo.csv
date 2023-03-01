@@ -1,0 +1,2 @@
+,Delay,Idx,IsBlown,MonitoredObj,MonitoredTerm,Name,NumPhases,RatedCurrent,SwitchedObj,SwitchedTerm,TCCCurve
+fuse_fuse(r:p13udt22087-p13udt8521)p13u_190929,0.0,1,False,line.fuse(r:p13udt22087-p13udt8521)p13u_190929,1,fuse_fuse(r:p13udt22087-p13udt8521)p13u_190929,1,165.0,line.fuse(r:p13udt22087-p13udt8521)p13u_190929,1,tlink

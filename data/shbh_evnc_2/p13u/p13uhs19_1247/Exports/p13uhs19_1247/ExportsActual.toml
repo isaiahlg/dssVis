@@ -1,0 +1,135 @@
+[[Loads]]
+property = "Powers"
+data_conversion = "none"
+opendss_classes = []
+sample_interval = 1
+publish = true
+store_values_type = "all"
+sum_elements = false
+
+[[Loads]]
+property = "VoltagesMagAng"
+data_conversion = "none"
+opendss_classes = []
+sample_interval = 1
+publish = true
+store_values_type = "all"
+sum_elements = false
+
+[[PVSystems]]
+property = "Powers"
+data_conversion = "none"
+opendss_classes = []
+sample_interval = 1
+publish = false
+store_values_type = "all"
+sum_elements = false
+
+[[PVSystems]]
+property = "VoltagesMagAng"
+data_conversion = "none"
+opendss_classes = []
+sample_interval = 1
+publish = false
+store_values_type = "all"
+sum_elements = false
+
+[[Storages]]
+property = "Powers"
+data_conversion = "none"
+opendss_classes = []
+sample_interval = 1
+publish = false
+store_values_type = "all"
+sum_elements = false
+
+[[Storages]]
+property = "VoltagesMagAng"
+data_conversion = "none"
+opendss_classes = []
+sample_interval = 1
+publish = false
+store_values_type = "all"
+sum_elements = false
+
+[[Storages]]
+property = "%stored"
+data_conversion = "none"
+opendss_classes = []
+sample_interval = 1
+publish = false
+store_values_type = "all"
+sum_elements = false
+
+[[Buses]]
+property = "puVmagAngle"
+data_conversion = "none"
+opendss_classes = []
+sample_interval = 1
+publish = false
+store_values_type = "all"
+sum_elements = false
+
+[[Circuits]]
+property = "TotalPower"
+data_conversion = "none"
+opendss_classes = []
+sample_interval = 1
+publish = true
+store_values_type = "all"
+sum_elements = false
+
+[[Circuits]]
+property = "AllBusMagPu"
+data_conversion = "none"
+opendss_classes = []
+sample_interval = 1
+publish = false
+store_values_type = "all"
+sum_elements = false
+
+[[Lines]]
+property = "normamps"
+data_conversion = "none"
+opendss_classes = []
+sample_interval = 1
+publish = false
+store_values_type = "all"
+sum_elements = false
+
+[[Lines]]
+property = "CurrentsMagAng"
+data_conversion = "none"
+opendss_classes = []
+sample_interval = 1
+publish = false
+store_values_type = "all"
+sum_elements = false
+
+[[Transformers]]
+property = "normamps"
+data_conversion = "none"
+opendss_classes = []
+sample_interval = 1
+publish = false
+store_values_type = "all"
+sum_elements = false
+
+[[Transformers]]
+property = "CurrentsMagAng"
+data_conversion = "none"
+opendss_classes = []
+sample_interval = 1
+publish = false
+store_values_type = "all"
+sum_elements = false
+
+[[Transformers]]
+property = "taps"
+data_conversion = "none"
+opendss_classes = []
+sample_interval = 1
+publish = false
+store_values_type = "all"
+sum_elements = false
+
