@@ -83,7 +83,7 @@ function parseLineData(lineStr, busObj) {
                     "lineCode": lineCode,
                 },
                 "geometry": {
-                    "type": "linestring",
+                    "type": "LineString",
                     "coordinates": [
                         bus1coords,
                         bus2coords                            
